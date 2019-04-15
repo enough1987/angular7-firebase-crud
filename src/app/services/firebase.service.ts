@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +26,11 @@ export class FirebaseService {
   }
 
   searchUsers(searchValue) {
-    return this.db.collection('users', ref => ref.where('nameToSearch', '>=', searchValue.toLowerCase())
-      .where('name', '<=', searchValue.toLowerCase() + '\uf8ff'))
+    return this.db.collection('users', ref => ref.where('name', '>=', searchValue.toLowerCase()))
       .snapshotChanges()
+      .pipe(
+        map((actions) => actions.filter(action => (action.payload.doc.data() as { name: String }).name.includes(searchValue.toLowerCase())))
+      )
   }
 
   searchUsersByAge(value) {
