@@ -1,5 +1,4 @@
-# Angular 6 Firebase CRUD Tutorial
-
+# Angular 7 Firebase CRUD
 
 ## Install dependencies
 
