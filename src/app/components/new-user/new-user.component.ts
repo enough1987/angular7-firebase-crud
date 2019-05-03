@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { FirebaseService } from '../services/firebase.service';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-new-user',

@@ -6,10 +6,10 @@ import { RouterModule } from '@angular/router';
 import { rootRouterConfig } from './app.routes';
 
 import { AppComponent } from './app.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
-import { EditUserResolver } from './edit-user/edit-user.resolver';
-import { NewUserComponent } from './new-user/new-user.component';
-import { HomeComponent } from './home/home.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { EditUserResolver } from './components/edit-user/edit-user.resolver';
+import { NewUserComponent } from './components/new-user/new-user.component';
+import { HomeComponent } from './components/home/home.component';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';

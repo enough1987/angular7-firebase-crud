@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'minimatch';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
 
+  private users: BehaviorSubject<any> = new BehaviorSubject<Array<any>>([]);
+  public users$: Observable<Array<any>> = this.users.asObservable();
+  private filters: { name?: String, age?: Number } = { name: '', age: 0 };
+
   constructor(public db: AngularFirestore) { }
 
   getUser(userKey) {
-    return this.db.collection('users').doc(userKey).snapshotChanges();
+    return this.db.collection('users').doc(userKey).snapshotChanges()
   }
 
   updateUser(userKey, value) {
@@ -21,22 +27,35 @@ export class FirebaseService {
     return this.db.collection('users').doc(userKey).delete();
   }
 
-  getUsers() {
-    return this.db.collection('users').snapshotChanges();
-  }
-
-  searchUsers(searchValue) {
-    return this.db.collection('users', ref => ref.where('name', '>=', searchValue.toLowerCase()))
+  getUsers(filter: (item: any) => boolean = () => true) {
+    this.db.collection('users')
       .snapshotChanges()
-      .pipe(
-        map((actions) => actions.filter(action => (action.payload.doc.data() as { name: String }).name.includes(searchValue.toLowerCase())))
+      .pipe(map((actions) => {
+          return actions.map(action => {
+            const data = action.payload.doc.data();
+            const id = action.payload.doc.id;
+            return { id, ...data };
+          });
+        })
       )
+    .subscribe((data) => {
+      const filteredData = data.filter(filter);
+      this.users.next(filteredData);
+    });
   }
 
-  searchUsersByAge(value) {
-    return this.db.collection('users', ref => ref.orderBy('age').startAt(value)).snapshotChanges();
-  }
+  filter(option) {
+    this.filters[option.name] = option.value;
+    this.getUsers( (item): boolean => {
+      const name = this.filters.name 
+        ? item.name.includes(this.filters.name) 
+        : true;
+      const age = this.filters.age <= item.age;
 
+      return name && age;
+    });
+
+  }
 
   createUser(value) {
     return this.db.collection('users').add({
@@ -44,4 +63,5 @@ export class FirebaseService {
       age: parseInt(value.age)
     });
   }
+
 }
