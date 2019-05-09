@@ -19,7 +19,7 @@ export class FirebaseService {
     return this.db.collection('users').doc(userKey).snapshotChanges()
   }
 
-  updateUser(user) {
+  updateUser(user: User) {
     const promise = this.db.collection('users')
                     .doc(user.id).set(
                       Object.assign({}, user)
@@ -27,7 +27,7 @@ export class FirebaseService {
     return from(promise);
   }
 
-  deleteUser(userKey) {
+  deleteUser(userKey: string) {
     const promise = this.db.collection('users')
                     .doc(userKey).delete();
     return from(promise);

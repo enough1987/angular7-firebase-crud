@@ -2,7 +2,7 @@
 export class User {
     name?: string;
     age?: number | string;
-    id?: number
+    id?: string
   
     constructor(name = '', age = 0) {
       this.name = name;

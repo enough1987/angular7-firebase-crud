@@ -51,11 +51,9 @@ export class EditUserComponent implements OnInit {
     });
   }
 
-  onSubmit(id: number, value: User) {
+  onSubmit(id: string, value: User) {
     const user = new User(value.name, +value.age);
     user.id = id;
-
-    console.log(' --- ', user);
 
     this.firebaseService.updateUser(user)
       .subscribe(() => {
