@@ -1,8 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter } from 'minimatch';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+
+
+export class User {
+  name?: string;
+  age?: number | string;
+  id?: number
+
+  constructor(name = '', age = 0) {
+    this.name = name;
+    this.age = age;
+  }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +22,7 @@ export class FirebaseService {
 
   private users: BehaviorSubject<any> = new BehaviorSubject<Array<any>>([]);
   public users$: Observable<Array<any>> = this.users.asObservable();
-  private filters: { name?: String, age?: Number } = { name: '', age: 0 };
+  private filters: User = new User;
 
   constructor(public db: AngularFirestore) { }
 
@@ -20,11 +31,15 @@ export class FirebaseService {
   }
 
   updateUser(userKey, value) {
-    return this.db.collection('users').doc(userKey).set(value);
+    const promise = this.db.collection('users')
+                    .doc(userKey).set(value);
+    return from(promise);
   }
 
   deleteUser(userKey) {
-    return this.db.collection('users').doc(userKey).delete();
+    const promise = this.db.collection('users')
+                    .doc(userKey).delete();
+    return from(promise);
   }
 
   getUsers(filter: (item: any) => boolean = () => true) {
@@ -44,9 +59,9 @@ export class FirebaseService {
     });
   }
 
-  filter(option) {
+  filter(option: {name: string, value: string}) {
     this.filters[option.name] = option.value;
-    this.getUsers( (item): boolean => {
+    this.getUsers( (item: { name: string, age: number}): boolean => {
       const name = this.filters.name 
         ? item.name.includes(this.filters.name) 
         : true;
@@ -54,14 +69,14 @@ export class FirebaseService {
 
       return name && age;
     });
-
   }
 
-  createUser(value) {
-    return this.db.collection('users').add({
+  createUser(value: User) {
+    const promise = this.db.collection('users').add({
       name: value.name.toLowerCase(),
-      age: parseInt(value.age)
+      age: value.age
     });
+    return from(promise);
   }
 
 }

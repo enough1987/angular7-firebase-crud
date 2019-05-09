@@ -27,20 +27,16 @@ export class HomeComponent implements OnInit {
     this.firebaseService.getUsers()
   }
 
-  viewDetails(item){
-    this.router.navigate(['/details/'+ item.id])
+  viewDetails(id: number){
+    this.router.navigate(['/details/'+ id])
   }
 
-  capitalizeFirstLetter(value){
-    return value.charAt(0).toUpperCase() + value.slice(1);
+  searchByName(value){
+    this.firebaseService.filter({ name: 'name', value });
   }
 
-  searchByName(){
-    this.firebaseService.filter({ name: 'name', value: this.searchValue });
-  }
-
-  rangeChange(event){
-    this.firebaseService.filter({ name: 'age', value : event.value });
+  rangeChange(value){
+    this.firebaseService.filter({ name: 'age', value });
   }
 
 }

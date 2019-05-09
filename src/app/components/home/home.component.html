@@ -4,7 +4,7 @@
       <input type="text" class="form-control" 
         [(ngModel)]="searchValue" 
         [ngModelOptions]="{standalone: true}"
-        (keyup)="searchByName()"
+        (keyup)="searchByName(searchValue)"
         placeholder="Search by name...">
       <div class="input-group-append">
         <span class="input-group-text">
@@ -22,7 +22,7 @@
         <span>0 </span>
         <mat-slider class="age-slider" max="1000" min="0" step="1" thumbLabel="true" 
           (ngModel)="ageValue"
-          (change)="rangeChange($event)">
+          (change)="rangeChange($event.value)">
         </mat-slider>
         <span> 1000</span>
       </div>
@@ -38,7 +38,7 @@
         <small>Age: {{item.age}}</small>
       </div>
       <div class="col col-md-2 actions-col">
-        <button class="btn btn-outline-primary action" (click)="viewDetails(item)" type="button">
+        <button class="btn btn-outline-primary action" (click)="viewDetails(item.id)" type="button">
           <ion-icon class="icon" name="arrow-round-forward"></ion-icon>
         </button>
       </div>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { FirebaseService } from '../../services/firebase.service';
+import { FirebaseService, User } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-new-user',
@@ -39,21 +39,11 @@ export class NewUserComponent implements OnInit {
     });
   }
 
-  resetFields() {
-    this.exampleForm = this.fb.group({
-      name: new FormControl('', Validators.required),
-      age: new FormControl('', Validators.required),
-    });
-  }
-
-  onSubmit(value) {
+  onSubmit(value: User) {
     this.firebaseService.createUser(value)
-      .then(
-        res => {
-          this.resetFields();
+      .subscribe(() => {
           this.router.navigate(['/home']);
-        }
-      )
+      });
   }
 
 }

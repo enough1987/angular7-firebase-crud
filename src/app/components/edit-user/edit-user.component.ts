@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { FirebaseService } from '../../services/firebase.service';
+import { FirebaseService, User } from '../../services/firebase.service';
 import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-edit-user',
@@ -13,8 +14,7 @@ import { Router } from '@angular/router';
 export class EditUserComponent implements OnInit {
 
   exampleForm: FormGroup;
-  item: any;
-
+  item: User;
   validation_messages = {
     'name': [
       { type: 'required', message: 'Name is required.' }
@@ -38,38 +38,32 @@ export class EditUserComponent implements OnInit {
       if (data) {
         this.item = data.payload.data();
         this.item.id = data.payload.id;
-        this.createForm();
+        this.createForm(this.item);
       }
     })
   }
 
-  createForm() {
+  createForm(item: User) {
     this.exampleForm = this.fb.group({
-      name: [this.item.name, Validators.required],
-      age: [this.item.age, Validators.required]
+      name: [item.name, Validators.required],
+      age: [item.age, Validators.required]
     });
   }
 
-  onSubmit(value) {
-    value.age = Number(value.age);
-    this.firebaseService.updateUser(this.item.id, value)
-      .then(
-        res => {
+  onSubmit(id, value: User) {
+    const user = new User(value.name, +value.age);
+
+    this.firebaseService.updateUser(id, user)
+      .subscribe(() => {
           this.router.navigate(['/home']);
-        }
-      )
+      });
   }
 
   delete() {
     this.firebaseService.deleteUser(this.item.id)
-      .then(
-        res => {
+      .subscribe(() => {
           this.router.navigate(['/home']);
-        },
-        err => {
-          console.log(err);
-        }
-      )
+      });
   }
 
   cancel() {

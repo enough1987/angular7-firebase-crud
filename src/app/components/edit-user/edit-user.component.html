@@ -9,7 +9,8 @@
 
       <div class="col col-md-8">
 
-        <form class="edit-form" [formGroup]="exampleForm" novalidate (ngSubmit)="onSubmit(exampleForm.value)">
+        <form class="edit-form" [formGroup]="exampleForm" novalidate 
+          (ngSubmit)="onSubmit(user.id, exampleForm.value)">
 
           <div class="form-group">
             <mat-form-field class="input-style">
