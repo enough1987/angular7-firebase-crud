@@ -2,18 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-
-
-export class User {
-  name?: string;
-  age?: number | string;
-  id?: number
-
-  constructor(name = '', age = 0) {
-    this.name = name;
-    this.age = age;
-  }
-}
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
