@@ -51,17 +51,20 @@ export class EditUserComponent implements OnInit {
     });
   }
 
-  onSubmit(id, value: User) {
+  onSubmit(id: number, value: User) {
     const user = new User(value.name, +value.age);
+    user.id = id;
 
-    this.firebaseService.updateUser(id, user)
+    console.log(' --- ', user);
+
+    this.firebaseService.updateUser(user)
       .subscribe(() => {
           this.router.navigate(['/home']);
       });
   }
 
-  delete() {
-    this.firebaseService.deleteUser(this.item.id)
+  delete(id) {
+    this.firebaseService.deleteUser(id)
       .subscribe(() => {
           this.router.navigate(['/home']);
       });

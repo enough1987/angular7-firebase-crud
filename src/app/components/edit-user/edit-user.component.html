@@ -10,7 +10,7 @@
       <div class="col col-md-8">
 
         <form class="edit-form" [formGroup]="exampleForm" novalidate 
-          (ngSubmit)="onSubmit(user.id, exampleForm.value)">
+          (ngSubmit)="onSubmit(item.id, exampleForm.value)">
 
           <div class="form-group">
             <mat-form-field class="input-style">
@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-4">
               <button mat-raised-button class="delete-button" color="warn" type="button"
-                (click)="delete()">Delete</button>
+                (click)="delete(item.id)">Delete</button>
             </div>
           </div>
         </form>
